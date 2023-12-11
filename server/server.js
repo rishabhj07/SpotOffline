@@ -1,12 +1,9 @@
 require('dotenv').config()
 
 const express = require('express');
+const routes = require('./routes');
 const morgan = require('morgan');
 const http = require('http')
-
-const client_id = process.env.CLIENT_ID;
-const client_secret = process.env.CLIENT_SECRET;
-const redirect_uri = 'http://localhost:3000/callback'; // Your redirect uri
 
 const scopes = [
     'ugc-image-upload',
@@ -33,23 +30,18 @@ const scopes = [
 const app = express();
 
 const PORT = process.env.PORT || 3000
-const ROOT_DIR_JS = 'client/src/js'; //root directory for javascript files
+const ROOT_DIR_JS = 'client/src'; //root directory for javascript files
 
 // Middleware
 app.use(morgan('dev'));
 
-//Convert any JSON stringified strings in a POST request to JSON.
-app.use(express.json())
+// Provide static server
+app.use(express.static(__dirname + ROOT_DIR_JS)); 
 
-app.use(express.static('client/public'))
-
-// Routes
-app.get(['/', '/index'], (req, res) => {
-    res.sendFile(__dirname + '/client/public/index.html')
-})
+// Use the routes with your app
+app.use('/', routes);
 
 // Start the server
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
-

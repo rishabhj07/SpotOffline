@@ -54,7 +54,6 @@ router.get('/login', function (req, res) {
 router.get('/callback', function (req, res) {
     var code = req.query.code || null;
     var state = req.query.state || null;
-
     if (state === null) {
         res.redirect('/#' +
             querystring.stringify({
@@ -76,26 +75,28 @@ router.get('/callback', function (req, res) {
         };
     }
 
-    if (state !== null) {
-        // ...
-        axios.post(authOptions.url, querystring.stringify(authOptions.form), {
-            headers: authOptions.headers
-        })
-        .then(response => {
-            // Handle the response from Spotify
-            // The access token will be in response.data.access_token
-            console.log(response.data.access_token);
-            // Redirect to your landing page
-            res.redirect('/landing_page');
-        })
-        .catch(error => {
-            console.error(error);
-            res.redirect('/#' +
-                querystring.stringify({
-                    error: 'invalid_token'
-                }));
-        });
-    }
+    res.redirect('/');
+
+    // if (state !== null) {
+    //     // ...
+    //     axios.post(authOptions.url, querystring.stringify(authOptions.form), {
+    //         headers: authOptions.headers
+    //     })
+    //     .then(response => {
+    //         // Handle the response from Spotify
+    //         // The access token will be in response.data.access_token
+    //         console.log(response.data.access_token);
+    //         // Redirect to your landing page
+    //         res.redirect('/landing_page');
+    //     })
+    //     .catch(error => {
+    //         console.error(error);
+    //         res.redirect('/#' +
+    //             querystring.stringify({
+    //                 error: 'invalid_token'
+    //             }));
+    //     });
+    // }
 
 });
 

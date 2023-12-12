@@ -14,7 +14,7 @@ const YoutubeConverter = () => {
 
   return (
     <div>
-      <Link to="/home"><h1 title="Click to return to homepage">Spotoffline</h1></Link>
+      <Link to="/home"><h1 title="Click to return to homepage">SpotOffline</h1></Link>
       <input type="text" value={link} onChange={handleInputChange} placeholder="Enter YouTube link" />
       <button onClick={handleSearchClick}>Search</button>
     </div>

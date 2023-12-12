@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const express = require('express');
 const routes = require('./routes');
+const path = require('path');
 const morgan = require('morgan');
 const http = require('http')
 
@@ -30,13 +31,13 @@ const scopes = [
 const app = express();
 
 const PORT = process.env.PORT || 3000
-const ROOT_DIR_JS = 'client/src'; //root directory for javascript files
+const ROOT_DIR_VIEWS = '../client'; 
 
 // Middleware
 app.use(morgan('dev'));
 
 // Provide static server
-app.use(express.static(__dirname + ROOT_DIR_JS)); 
+app.use(express.static(path.join(__dirname, ROOT_DIR_VIEWS))); 
 
 // Use the routes with your app
 app.use('/', routes);

@@ -8,13 +8,9 @@ const morgan = require('morgan');
 const app = express();
 
 const PORT = process.env.PORT || 8080
-const ROOT_DIR_VIEWS = '../client'; 
 
 // Middleware
 app.use(morgan('dev'));
-
-// Provide static server
-app.use(express.static(path.join(__dirname, ROOT_DIR_VIEWS))); 
 
 // Use the routes with your app
 app.use('/', routes);

@@ -14,10 +14,6 @@ function generateRandomString(length) {
     return crypto.randomBytes(length).toString('hex');
 }
 
-router.get(['/', '/index'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public/index.html'));
-});
-
 router.get('/login', function (req, res) {
     var state = generateRandomString(8);
     const scopes = [
@@ -73,13 +69,18 @@ router.get('/callback', function (req, res) {
             console.error(error);
         });
 
-    res.redirect('/landingpage');
+    res.redirect('http://localhost:3000/home');
 
 
 });
 
-router.get(['/', '/landingpage'], (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/public/index.html'));
+router.get('/spotify_to_mp3', function (req, res) {
+    res.redirect('http://localhost:3000/spotify_to_mp3');
 });
+
+router.get('/youtube_to_mp3', function (req, res) {
+    res.redirect('http://localhost:3000/youtube_to_mp3');
+});
+
 
 module.exports = router;

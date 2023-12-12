@@ -1,11 +1,18 @@
 import React from 'react';
 
-function App() {
-  return (
-    <div>
-      {/* Your code here */}
-    </div>
-  );
+class App extends React.Component {
+  handleLoginClick = () => {
+    window.location.href = 'http://localhost:8080/login';
+  }
+
+  render() {
+    return (
+      <div>
+        <h1>Click to login</h1>
+        <button id="login_button" onClick={this.handleLoginClick}>Login</button>
+      </div>
+    );
+  }
 }
 
 export default App;

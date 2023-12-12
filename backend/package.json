@@ -1,11 +1,12 @@
 {
-  "name": "server",
+  "name": "backend",
   "version": "1.0.0",
   "description": "backend server for the react app",
   "main": "server.js",
   "license": "MIT",
-  "author": {"name": "Rishabh Jain"},
-
+  "author": {
+    "name": "Rishabh Jain"
+  },
   "dependencies": {
     "axios": "^1.6.2",
     "dotenv": "^16.3.1",

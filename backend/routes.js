@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
+const axios = require('axios');
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -11,6 +12,10 @@ const crypto = require('crypto');
 
 function generateRandomString(length) {
     return crypto.randomBytes(length).toString('hex');
+}
+
+function fetchAccessToken(code) {
+
 }
 
 router.get(['/', '/index'], (req, res) => {
@@ -63,41 +68,40 @@ router.get('/callback', function (req, res) {
         var authOptions = {
             url: 'https://accounts.spotify.com/api/token',
             form: {
+                grant_type: 'authorization_code',
                 code: code,
-                redirect_uri: 'http://localhost:3000/',
-                grant_type: 'authorization_code'
+                redirect_uri: redirect_uri,
+                client_id: client_id,
+                client_secret: client_secret
             },
             headers: {
-                'content-type': 'application/x-www-form-urlencoded',
+                'Content-Type': 'application/x-www-form-urlencoded',
                 'Authorization': 'Basic ' + (new Buffer.from(client_id + ':' + client_secret).toString('base64'))
             },
             json: true
         };
     }
 
-    res.redirect('/');
+    axios({
+        method: 'post',
+        url: authOptions.url,
+        headers: authOptions.headers,
+        data: querystring.stringify(authOptions.form)
+    })
+        .then(response => {
+            console.log(response.data);
+        })
+        .catch(error => {
+            console.error(error);
+        });
 
-    // if (state !== null) {
-    //     // ...
-    //     axios.post(authOptions.url, querystring.stringify(authOptions.form), {
-    //         headers: authOptions.headers
-    //     })
-    //     .then(response => {
-    //         // Handle the response from Spotify
-    //         // The access token will be in response.data.access_token
-    //         console.log(response.data.access_token);
-    //         // Redirect to your landing page
-    //         res.redirect('/landing_page');
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //         res.redirect('/#' +
-    //             querystring.stringify({
-    //                 error: 'invalid_token'
-    //             }));
-    //     });
-    // }
+    res.redirect('/landingpage');
 
+
+});
+
+router.get(['/', '/landingpage'], (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/public/index.html'));
 });
 
 module.exports = router;

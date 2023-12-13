@@ -1,15 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+const spotifyConverterClick = () => {
+    window.location.href = 'http://localhost:3000/spotify_to_mp3';
+};
+
+const youtubeConverterClick = () => {
+    window.location.href = 'http://localhost:3000/youtube_to_mp3';
+};
+
 const Home = () => {
-    const spotifyConverterClick = () => {
-        window.location.href = 'http://localhost:3000/spotify_to_mp3';
-    };
-
-    const youtubeConverterClick = () => {
-        window.location.href = 'http://localhost:3000/youtube_to_mp3';
-    };
-
     return (
         <div>
             <Link to="/home"><h1 title="Click to return to homepage">SpotOffline</h1></Link>

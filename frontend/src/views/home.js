@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 const Home = () => {
     const spotifyConverterClick = () => {
-        window.location.href = 'http://localhost:8080/spotify_to_mp3';
+        window.location.href = 'http://localhost:3000/spotify_to_mp3';
     };
 
     const youtubeConverterClick = () => {
-        window.location.href = 'http://localhost:8080/youtube_to_mp3';
+        window.location.href = 'http://localhost:3000/youtube_to_mp3';
     };
 
     return (

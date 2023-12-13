@@ -15,6 +15,8 @@ const PORT = process.env.PORT || 8080
 // Middleware
 app.use(morgan('dev'));
 
+app.use(express.json());
+
 // Use the routes with your app
 app.use('/', routes);
 

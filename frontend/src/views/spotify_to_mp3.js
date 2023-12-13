@@ -1,36 +1,44 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import axios from 'axios';
 
 const SpotifyConverter = () => {
   const [data, setData] = useState(null); // Used to store the fetched data
   const [selectedAlbum, setAlbum] = useState(null); // Used to store the fetched data
 
   useEffect(() => {
-    fetch('http://localhost:8080/spotify_to_mp3')
-      .then(response => response.json())
-      .then(data => {
-        console.log(data);
-        setData(data); 
+    axios.get('http://localhost:8080/fetchAlbumData')
+      .then(response => {
+        setData(response.data);
       })
       .catch(error => console.error('Error:', error));
   }, []);
 
+  const handleAlbumChange = (e) => {
+    const selected = data.find((x) => x.name === e.target.value);
+    setAlbum(selected);
+  
+    // Send the selected album back to the server
+    axios.post('http://localhost:8080/userSelectedAlbum', selected)
+      .then(response => {
+        console.log('Response from server:');
+        console.log(response.data.items);
+      })
+      .catch(error => console.error('Error:', error));
+  };
+
   return (
     <div>
       <Link to="/home"><h1 title="Click to return to homepage">SpotOffline</h1></Link>
-      <div id="chart">Chart will go here</div>
-      {data && 
-        <select
-          onChange={(e) =>{
-            const c = data.find((x) => x.name === e.target.value);
-            setAlbum(c);
-          }}>
+      {data &&
+        <select onChange={handleAlbumChange}>
+          <option value="">Select an album</option>
           {data.map((item, index) => (
             <option key={index} value={item.name}>{item.name}</option>
           ))}
         </select>
       }
-      {selectedAlbum && <div>Selected Album: {selectedAlbum.name}</div>}
+      {selectedAlbum && <div>Selected Album: {selectedAlbum.tracks.href}</div>}
     </div>
   );
 };

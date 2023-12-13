@@ -68,42 +68,10 @@ router.get('/callback', function (req, res) {
             accessToken = response.data.access_token; // Assign value to accessToken
         });
 
-    // axios({
-    //     method: 'post',
-    //     url: authOptions.url,
-    //     headers: authOptions.headers,
-    //     data: querystring.stringify(authOptions.form)
-    // })
-    //     .then(response => {
-    //         accessToken = response.data.access_token; // Assign value to accessToken
-    //         return axios.get('https://api.spotify.com/v1/me/playlists?limit=1&offset=0', {
-    //             headers: {
-    //                 Authorization: 'Bearer ' + accessToken
-    //             }
-    //         });
-    //     })
-    //     .then(response => {
-    //         return Promise.all(response.data.items.map(item => {
-    //             return axios.get(item.tracks.href, {
-    //                 headers: {
-    //                     Authorization: 'Bearer ' + accessToken
-    //                 }
-    //             });
-    //         }));
-    //     })
-    //     .then(responses => { // responses is an array of responses from the axios.get calls
-    //         responses.forEach(response => {
-    //             console.log(response.data.items[0].track.name);
-    //         });
-    //     })
-    //     .catch(error => {
-    //         console.error(error);
-    //     });
-
     res.redirect('http://localhost:3000/home');
 });
 
-router.get('/spotify_to_mp3', function (req, res) {
+router.get('/fetchAlbumData', function (req, res) {
     axios({
         method: 'get',
         url: 'https://api.spotify.com/v1/me/playlists?limit=50&offset=0',
@@ -111,8 +79,27 @@ router.get('/spotify_to_mp3', function (req, res) {
             Authorization: 'Bearer ' + accessToken
         }
     })
+        .then(response => {
+            res.json(response.data.items);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred' });
+        });
+});
+
+router.post('/userSelectedAlbum', function (req, res) {
+    const selectedAlbum = req.body;
+
+    axios({
+        method: 'get',
+        url: selectedAlbum.tracks.href,
+        headers: {
+            Authorization: 'Bearer ' + accessToken
+        }
+    })
     .then(response => {
-        res.json(response.data.items);
+        res.json(response.data);
         console.log(response.data.items);
     })
     .catch(error => {
@@ -120,6 +107,7 @@ router.get('/spotify_to_mp3', function (req, res) {
         res.status(500).json({ error: 'An error occurred' });
     });
 });
+
 
 router.get('/youtube_to_mp3', function (req, res) {
     res.redirect('http://localhost:3000/youtube_to_mp3');

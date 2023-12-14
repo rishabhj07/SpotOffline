@@ -17,9 +17,15 @@ const sendSelectedAlbum = async (selected) => {
 
 const SpotifyConverter = () => {
   const [data, setData] = useState(null);
-  const [selectedAlbum, setAlbum] = useState(null);
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
+  const [selectedAlbum, setAlbum] = useState(null);
+  const [selectedSongs, setSelectedSongs] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
+  useEffect(() => {
+    console.log("Selected songs: ", selectedSongs);
+  }, [selectedSongs]);
 
   useEffect(() => {
     fetchAlbumData()
@@ -33,6 +39,8 @@ const SpotifyConverter = () => {
   const handleAlbumChange = (e) => {
     const selected = data.find((x) => x.name === e.target.value);
     setAlbum(selected);
+    setSelectAll(false);
+    setSelectedSongs([]);
 
     sendSelectedAlbum(selected)
       .then((items) => {
@@ -44,9 +52,33 @@ const SpotifyConverter = () => {
       });
   };
 
-  const handleDownload = (index) => {
-    const selectedItem = items[index];
-    console.log('Download button clicked for item:', selectedItem);
+  const handleCheckboxChange = (e, songName) => {
+    if (e.target.checked) {
+      setSelectedSongs(prevSongs => {
+        const newSongs = [...prevSongs, songName];
+        if (newSongs.length === items.length) {
+          setSelectAll(true);
+        }
+        return newSongs;
+      });
+    } else {
+      setSelectedSongs(prevSongs => {
+        const newSongs = prevSongs.filter(song => song !== songName);
+        if (newSongs.length < items.length) {
+          setSelectAll(false);
+        }
+        return newSongs;
+      });
+    }
+  };
+
+  const handleSelectAllChange = (e) => {
+    setSelectAll(e.target.checked);
+    if (e.target.checked) {
+      setSelectedSongs(items.map(item => item.track.name));
+    } else {
+      setSelectedSongs([]);
+    }
   };
 
   if (error) {
@@ -71,6 +103,10 @@ const SpotifyConverter = () => {
               <th>Album Art</th>
               <th>Track Info</th>
               <th>Download</th>
+              <th><input
+                type="checkbox"
+                checked={selectAll}
+                onChange={handleSelectAllChange} /> Select All</th>
             </tr>
           </thead>
           <tbody>
@@ -81,7 +117,13 @@ const SpotifyConverter = () => {
                   <p>{item.track.name}</p>
                   <p>{item.track.artists.map(artist => artist.name).join(', ')}</p>
                 </td>
-                <td><button onClick={() => handleDownload(index)}>Download</button></td>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedSongs.includes(item.track.name)}
+                    onChange={(e) => handleCheckboxChange(e, item.track.name)}
+                  />
+                </td>
               </tr>
             ))}
           </tbody>

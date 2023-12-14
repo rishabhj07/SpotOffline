@@ -8,12 +8,12 @@ const morgan = require('morgan');
 
 const app = express();
 
-app.use(cors());
-
 const PORT = process.env.PORT || 8080
 
 // Middleware
 app.use(morgan('dev'));
+
+app.use(cors());
 
 app.use(express.json());
 

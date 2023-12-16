@@ -20,12 +20,12 @@ const SpotifyConverter = () => {
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
   const [selectedAlbum, setAlbum] = useState(null);
-  const [selectedSongs, setSelectedSongs] = useState([]);
+  const [TrackInfo, setTrackInfo] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
   useEffect(() => {
-    console.log("Selected songs: ", selectedSongs);
-  }, [selectedSongs]);
+    console.log("Selected songs: ", TrackInfo);
+  }, [TrackInfo]);
 
   useEffect(() => {
     fetchAlbumData()
@@ -40,7 +40,7 @@ const SpotifyConverter = () => {
     const selected = data.find((x) => x.name === e.target.value);
     setAlbum(selected);
     setSelectAll(false);
-    setSelectedSongs([]);
+    setTrackInfo([]);
 
     sendSelectedAlbum(selected)
       .then((items) => {
@@ -52,22 +52,26 @@ const SpotifyConverter = () => {
       });
   };
 
-  const handleCheckboxChange = (e, songName) => {
+  function getArtistNames(track) {
+    return track.artists.map(artist => artist.name).join(', ');
+  }
+
+  const handleCheckboxChange = (e, track) => {
     if (e.target.checked) {
-      setSelectedSongs(prevSongs => {
-        const newSongs = [...prevSongs, songName];
-        if (newSongs.length === items.length) {
+      setTrackInfo(prevTrackInfo => {
+        const newTrackInfo = [...prevTrackInfo, { name: track.name, artist: getArtistNames(track) }];
+        if (newTrackInfo.length === items.length) {
           setSelectAll(true);
         }
-        return newSongs;
+        return newTrackInfo;
       });
     } else {
-      setSelectedSongs(prevSongs => {
-        const newSongs = prevSongs.filter(song => song !== songName);
-        if (newSongs.length < items.length) {
+      setTrackInfo(prevTrackInfo => {
+        const newTrackInfo = prevTrackInfo.filter(songInfo => songInfo.name !== track.name);
+        if (newTrackInfo.length < items.length) {
           setSelectAll(false);
         }
-        return newSongs;
+        return newTrackInfo;
       });
     }
   };
@@ -75,9 +79,11 @@ const SpotifyConverter = () => {
   const handleSelectAllChange = (e) => {
     setSelectAll(e.target.checked);
     if (e.target.checked) {
-      setSelectedSongs(items.map(item => item.track.name));
+      setTrackInfo(items.map(item => {
+        return { name: item.track.name, artist: getArtistNames(item.track) };
+      }));
     } else {
-      setSelectedSongs([]);
+      setTrackInfo([]);
     }
   };
 
@@ -115,13 +121,13 @@ const SpotifyConverter = () => {
                 <td><img src={item.track.album.images[2].url} alt="Album Art" /></td>
                 <td>
                   <p>{item.track.name}</p>
-                  <p>{item.track.artists.map(artist => artist.name).join(', ')}</p>
+                  <p>{getArtistNames(item.track)}</p>
                 </td>
                 <td>
                   <input
                     type="checkbox"
-                    checked={selectedSongs.includes(item.track.name)}
-                    onChange={(e) => handleCheckboxChange(e, item.track.name)}
+                    checked={TrackInfo.some(song => song.name === item.track.name)}
+                    onChange={(e) => handleCheckboxChange(e, item.track)}
                   />
                 </td>
               </tr>

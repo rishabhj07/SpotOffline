@@ -4,28 +4,15 @@ import axios from 'axios';
 
 const ALBUM_DATA_URL = 'http://localhost:8080/fetchAlbumData';
 const SELECTED_ALBUM_URL = 'http://localhost:8080/userSelectedAlbum';
-
-const fetchAlbumData = async () => {
-  const response = await axios.get(ALBUM_DATA_URL);
-  return response.data;
-};
-
-const sendSelectedAlbum = async (selected) => {
-  const response = await axios.post(SELECTED_ALBUM_URL, selected);
-  return response.data.items;
-};
+const DOWNLOAD_TRACKS_URL = 'http://localhost:8080/downloadTracks';
 
 const SpotifyConverter = () => {
   const [data, setData] = useState(null);
   const [items, setItems] = useState(null);
   const [error, setError] = useState(null);
   const [selectedAlbum, setAlbum] = useState(null);
-  const [TrackInfo, setTrackInfo] = useState([]);
+  const [trackInfo, setTrackInfo] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
-
-  useEffect(() => {
-    console.log("Selected songs: ", TrackInfo);
-  }, [TrackInfo]);
 
   useEffect(() => {
     fetchAlbumData()
@@ -35,6 +22,36 @@ const SpotifyConverter = () => {
         setError('Failed to fetch album data');
       });
   }, []);
+
+  const fetchAlbumData = async () => {
+    try {
+      const response = await axios.get(ALBUM_DATA_URL);
+      return response.data;
+    } catch (error) {
+      console.error('Error fetching album data:', error);
+      setError('Failed to fetch album data');
+    }
+  };
+  
+  const sendSelectedAlbum = async (selected) => {
+    try {
+      const response = await axios.post(SELECTED_ALBUM_URL, selected);
+      return response.data.items;
+    } catch (error) {
+      console.error('Error sending selected album data:', error);
+      setError('Failed to send selected album data');
+    }
+  };
+  
+  const downloadTracks = async (trackInfo) => {
+    try {
+      const response = await axios.post(DOWNLOAD_TRACKS_URL, trackInfo);
+      return response.data;
+    } catch (error) {
+      console.error('Error downloading tracks:', error);
+      setError('Failed to download tracks');
+    }
+  };
 
   const handleAlbumChange = (e) => {
     const selected = data.find((x) => x.name === e.target.value);
@@ -87,6 +104,10 @@ const SpotifyConverter = () => {
     }
   };
 
+  const handleDownloadClick = async () => {
+    await downloadTracks(trackInfo);
+  };
+
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -112,7 +133,9 @@ const SpotifyConverter = () => {
               <th><input
                 type="checkbox"
                 checked={selectAll}
-                onChange={handleSelectAllChange} /> Select All</th>
+                onChange={handleSelectAllChange} /> Select All
+                <button onClick={handleDownloadClick}>Download</button>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -126,7 +149,7 @@ const SpotifyConverter = () => {
                 <td>
                   <input
                     type="checkbox"
-                    checked={TrackInfo.some(song => song.name === item.track.name)}
+                    checked={trackInfo.some(song => song.name === item.track.name)}
                     onChange={(e) => handleCheckboxChange(e, item.track)}
                   />
                 </td>

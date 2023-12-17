@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
+const ytdl = require('ytdl-core');
+const ytsr = require('ytsr');
+const archiver = require('archiver');
+const fs = require('fs');
+const path = require('path');
 
 const client_id = process.env.CLIENT_ID;
 const client_secret = process.env.CLIENT_SECRET;
@@ -97,16 +102,81 @@ router.post('/userSelectedAlbum', function (req, res) {
             Authorization: 'Bearer ' + accessToken
         }
     })
-    .then(response => {
-        res.json(response.data);
-        console.log(response.data.items);
-    })
-    .catch(error => {
-        console.error(error);
-        res.status(500).json({ error: 'An error occurred' });
-    });
+        .then(response => {
+            res.json(response.data);
+            console.log(response.data.items);
+        })
+        .catch(error => {
+            console.error(error);
+            res.status(500).json({ error: 'An error occurred' });
+        });
 });
 
+router.post('/downloadTracks', async (req, res) => {
+    const trackInfo = req.body;
+    // Create a new directory for the downloaded files if it doesn't already exist
+    const downloadsDir = path.join(__dirname, 'downloads');
+    if (!fs.existsSync(downloadsDir)) {
+        fs.mkdirSync(downloadsDir);
+    }
+
+    if (trackInfo.length > 1) {
+        const archive = archiver('zip');
+        const output = fs.createWriteStream(path.join(downloadsDir, 'downloaded_songs.zip'));
+
+        output.on('close', function () {
+            res.setHeader('Content-Type', 'application/zip');
+            res.setHeader('Content-Disposition', 'attachment; filename=tracks.zip');
+            res.download(path.join(downloadsDir, 'downloaded_songs.zip'));
+        });
+
+        archive.pipe(output);
+
+        const downloadPromises = trackInfo.map(async (track) => {
+            try {
+                const query = `${track.name} ${track.artist}`;
+                const results = await ytsr(query, { limit: 1 });
+                if (results && results.items && results.items.length > 0) {
+                    const url = results.items[0].url;
+                    const stream = ytdl(url, { filter: 'audioonly' });
+                    stream.on('error', error => {
+                        console.error(`An error occurred when downloading the video at url: ${url}`, error);
+                    });
+                    archive.append(stream, { name: `${track.name}.mp3` });
+                } else {
+                    console.error(`No results found for the song: ${track.name}`);
+                }
+            } catch (error) {
+                console.error(`An error occurred when downloading the song: ${track.name}`, error);
+            }
+        });
+
+        Promise.all(downloadPromises).then(() => {
+            archive.finalize();
+        });
+    } else if (trackInfo.length === 1) {
+        try {
+            const track = trackInfo[0];
+            const query = `${track.name} ${track.artist}`;
+            const results = await ytsr(query, { limit: 1 });
+            const url = results.items[0].url;
+            const stream = ytdl(url, { filter: 'audioonly' });
+            const output = fs.createWriteStream(path.join(downloadsDir, `${track.name}.mp3`));
+
+            stream.pipe(output);
+
+            output.on('finish', function () {
+                res.setHeader('Content-Type', 'audio/mpeg');
+                res.setHeader('Content-Disposition', `attachment; filename=${track.name}.mp3`);
+                res.download(path.join(downloadsDir, `${track.name}.mp3`));
+            });
+        } catch (error) {
+            console.error(`An error occurred when downloading the song: ${track.name}`, error);
+        }
+    } else {
+        res.status(400).json({ error: 'No tracks provided' });
+    }
+});
 
 router.get('/youtube_to_mp3', function (req, res) {
     res.redirect('http://localhost:3000/youtube_to_mp3');

@@ -32,7 +32,7 @@ const SpotifyConverter = () => {
       setError('Failed to fetch album data');
     }
   };
-  
+
   const sendSelectedAlbum = async (selected) => {
     try {
       const response = await axios.post(SELECTED_ALBUM_URL, selected);
@@ -42,15 +42,26 @@ const SpotifyConverter = () => {
       setError('Failed to send selected album data');
     }
   };
-  
+
   const downloadTracks = async (trackInfo) => {
-    try {
-      const response = await axios.post(DOWNLOAD_TRACKS_URL, trackInfo);
-      return response.data;
-    } catch (error) {
-      console.error('Error downloading tracks:', error);
-      setError('Failed to download tracks');
-    }
+    axios({
+      url: DOWNLOAD_TRACKS_URL,
+      method: 'POST',
+      responseType: 'blob',
+      data: trackInfo
+    }).then((response) => {
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      const contentType = response.headers['content-type'];
+      if (contentType === 'application/zip') {
+        link.setAttribute('download', 'songs.zip');
+      } else if (contentType === 'audio/mpeg') {
+        link.setAttribute('download', trackInfo[0].name +'.mp3');
+      }
+      document.body.appendChild(link);
+      link.click();
+    });
   };
 
   const handleAlbumChange = (e) => {

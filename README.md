@@ -1,6 +1,6 @@
 # SpotOffline
 
-## A Spotify Playlist to Youtube MP3 File Converter
+A Spotify Playlist to Youtube MP3 File Converter
 
 ## Table of Contents
 
@@ -18,11 +18,11 @@ This project is a full-stack JavaScript application designed to convert your Spo
 
 1. Clone te repository:
 
-### `git clone https://github.com/rishabhj07/SpotOffline.git`
+    ### `git clone https://github.com/rishabhj07/SpotOffline.git`
 
 2. Navigate to the project root directory
 
-### `cd SpotOffline`
+    ### `cd SpotOffline`
 
 From here, this project requires two seperate installations, one for the frontend and one for backend.
 
@@ -30,7 +30,7 @@ From here, this project requires two seperate installations, one for the fronten
 
 1. Navigate to the `backend` directory:
 
-### `cd backend`
+    ### `cd backend`
 
 2. Install necessary packages:
 

@@ -10,7 +10,8 @@ A Spotify Playlist to Youtube MP3 File Converter
 - [Media](#media)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Contriputions](#contributions)
+- [Future Additions](#additions)
+- [Contributions](#contributions)
 - [License](#license)
 
 ## About
@@ -24,6 +25,8 @@ As someone who does not pay for Spotify Premium or have an unlimited data plan, 
 Since I could not find suitable alternatives to Spotify Premium online, I decided to program my own software to make downloading playlists easy.
 
 ## UML
+
+![UML Diagram](https://i.imgur.com/6gUhDxz.png)
 
 ## Media
 
@@ -113,6 +116,12 @@ After installing necessary packages, please follow the instructions below to sta
     npm start
     ```
 Now you can interact with the application using a browser by opening [http://localhost:3000](http://localhost:3000). If you need to stop the servers, you can do so by pressing `Ctrl+C` in the respective terminal instances.
+
+## Additions
+
+- Hosting using AWS
+- Ability to convert Youtube links to mp3 files
+- Create a better Youtube downloader
 
 ## Contributions
 

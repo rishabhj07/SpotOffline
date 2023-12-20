@@ -26,7 +26,7 @@ Since I could not find suitable alternatives to Spotify Premium online, I decide
 
 ## UML
 
-![UML Diagram](https://imgur.com/gallery/ZUEfQGS)
+![UML Diagram](https://i.imgur.com/6697tso.png)
 
 ## Media
 

@@ -26,7 +26,7 @@ Since I could not find suitable alternatives to Spotify Premium online, I decide
 
 ## UML
 
-<blockquote class="imgur-embed-pub" lang="en" data-id="a/ZUEfQGS"  ><a href="//imgur.com/a/ZUEfQGS">UML Diagram</a></blockquote><script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+![UML Diagram](https://imgur.com/gallery/ZUEfQGS)
 
 ## Media
 

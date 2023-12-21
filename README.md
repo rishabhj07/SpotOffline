@@ -122,7 +122,7 @@ After installing necessary packages, please follow the instructions below to sta
     serve -s dist
     ```
 
-Now you can interact with the application using a browser by opening [http://localhost:3000](http://localhost:3000). If you need to stop the servers, you can do so by pressing `Ctrl+C` in the respective terminal instances.
+Now you can interact with the application using a browser by opening [http://localhost:3000](http://localhost:3000). If you need to stop the programs, you can do so by pressing `Ctrl+C` in the respective terminal instances.
 
 > [!Important]
 >

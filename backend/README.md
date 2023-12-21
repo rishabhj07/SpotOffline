@@ -1,13 +1,15 @@
-**Starting Backend Server As A Dev**
+## Starting Backend Server As A Dev
 
-    In a new terminal instance, navigate to the [`backend`](https://github.com/rishabhj07/SpotOffline/tree/main/backend) directory:
+In a new terminal instance, navigate to the [`backend`](https://github.com/rishabhj07/SpotOffline/tree/main/backend) directory:
 
-    ```sh
-    cd backend
-    ```
+```sh
+cd backend
+```
 
-    Run dev script:
+Run dev script:
 
-    ```sh
-    npm run dev
-    ```
+```sh
+npm run dev
+```
+
+To stop the program, press `Ctrl+C` in the terminal.

@@ -110,12 +110,23 @@ After installing necessary packages, please follow the instructions below to sta
     cd frontend
     ```
 
-    Start the frontend server:
+    Create production build:
 
     ```sh
-    npm start
+    npm run build
     ```
+
+    Start production build:
+
+    ```sh
+    serve -s dist
+    ```
+
 Now you can interact with the application using a browser by opening [http://localhost:3000](http://localhost:3000). If you need to stop the servers, you can do so by pressing `Ctrl+C` in the respective terminal instances.
+
+> [!Important]
+>
+> To run the [`backend`](https://github.com/rishabhj07/SpotOffline/tree/main/backend) and [`frontend`](https://github.com/rishabhj07/SpotOffline/tree/main/frontend) for development purposes, please see the [`README for frontend`](https://github.com/rishabhj07/SpotOffline/blob/main/frontend/README.md) and [`README for backend`](https://github.com/rishabhj07/SpotOffline/blob/main/backend/README.md) respectively for more details.
 
 ## Additions
 

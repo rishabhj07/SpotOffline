@@ -130,8 +130,8 @@ Now you can interact with the application using a browser by opening [http://loc
 
 ## Additions
 
-- Hosting using AWS
 - Ability to convert Youtube links to mp3 files
+- Hosting using AWS
 - Create a better Youtube downloader
 
 ## Contributions

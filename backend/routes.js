@@ -72,7 +72,7 @@ router.get('/callback', function (req, res) {
             accessToken = response.data.access_token; // Assign value to accessToken
         });
 
-    res.redirect('http://localhost:3000/home');
+    res.redirect('http://localhost:3000/spotify_to_mp3');
 });
 
 router.get('/fetchAlbumData', function (req, res) {
@@ -176,10 +176,6 @@ router.post('/downloadTracks', async (req, res) => {
     } else {
         res.status(400).json({ error: 'No tracks provided' });
     }
-});
-
-router.get('/youtube_to_mp3', function (req, res) {
-    res.redirect('http://localhost:3000/youtube_to_mp3');
 });
 
 module.exports = router;
